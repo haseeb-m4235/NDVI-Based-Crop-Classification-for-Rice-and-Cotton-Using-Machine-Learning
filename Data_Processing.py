@@ -143,7 +143,7 @@ class DataPreProcess:
         
         return new_X_train,new_X_test
         
-    def handle_imbalance(self,X_train,y_train):
+    def handle_imbalance(self,X_train,y_train,desc):
         """
     Handles class imbalance in the training dataset using the Synthetic Minority Oversampling Technique (SMOTE).
 
@@ -176,12 +176,38 @@ class DataPreProcess:
     New class distribution after SMOTE: Counter({0: 1000, 1: 1000})
     Total samples after augmentation: 2000
         """
+        # Define class label mapping
+        label_mapping = {0: "rice", 1: "cotton"}
+
+        # Map numeric labels to class names for plotting
+        def map_labels(counter):
+            return {label_mapping[k]: v for k, v in counter.items()}
+
+        # Plot original class distribution
+        original_distribution = Counter(y_train)
+        plt.figure(figsize=(10, 5))
+        plt.subplot(1, 2, 1)
+        mapped_original = map_labels(original_distribution)
+        plt.bar(mapped_original.keys(), mapped_original.values(), color='skyblue')
+        plt.title(desc)
+        plt.xlabel("Class Labels")
+        plt.ylabel("Count")
+
         # oversampling the train dataset using SMOTE
         smt = SMOTE()
         X_train_sm, y_train_sm = smt.fit_resample(X_train, y_train)
         # Check the new class distribution
         new_distribution = Counter(y_train_sm)
 
+        # Plot new class distribution
+        plt.subplot(1, 2, 2)
+        mapped_new = map_labels(new_distribution)
+        plt.bar(mapped_new.keys(), mapped_new.values(), color='orange')
+        plt.title(f"{desc} After SMOTE")
+        plt.xlabel("Class Labels")
+        plt.ylabel("Count")
+        plt.tight_layout()
+        plt.show()
         # Print results
         print("Original class distribution:", Counter(y_train))
         print("New class distribution after SMOTE:", new_distribution)
@@ -215,9 +241,11 @@ class DataPreProcess:
         data_split["X_train_3"],data_split["X_test_3"]=self.scalling(data_split["X_train_3"],data_split["X_test_3"])
 
         # Handling Imbalance
-        data_split["X_train_1"],data_split["y_train_1"]=self.handle_imbalance(data_split["X_train_1"],data_split["y_train_1"])
-        data_split["X_train_2"],data_split["y_train_2"]=self.handle_imbalance(data_split["X_train_2"],data_split["y_train_2"])
-        data_split["X_train_3"],data_split["y_train_3"]=self.handle_imbalance(data_split["X_train_3"],data_split["y_train_3"])
+        data_split["X_train_1"],data_split["y_train_1"]=self.handle_imbalance(data_split["X_train_1"],data_split["y_train_1"],desc="Class Distribution on 2022 and 2023 split")
+        data_split["X_train_2"],data_split["y_train_2"]=self.handle_imbalance(data_split["X_train_2"],data_split["y_train_2"],desc="Class Distribution on 2021 and 2023 split")
+        data_split["X_train_3"],data_split["y_train_3"]=self.handle_imbalance(data_split["X_train_3"],data_split["y_train_3"],desc="Class Distribution on 2021 and 2022 split")
+
+        '''Add time series augmentation, feature engineering like log transform or polynomial feature etc'''
 
         return data_split
 
