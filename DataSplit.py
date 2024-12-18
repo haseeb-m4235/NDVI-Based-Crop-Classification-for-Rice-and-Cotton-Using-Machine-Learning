@@ -21,9 +21,9 @@ class DataSplit():
         cotton_2021_path = os.path.join(self.datasetDir, "Cotton", "cotton2021.csv")
         cotton_2022_path = os.path.join(self.datasetDir, "Cotton", "cotton2022.csv")
         cotton_2023_path = os.path.join(self.datasetDir, "Cotton", "cotton2023.csv")
-        rice_2021_path =  os.path.join(self.datasetDir, "Rice", "Rice2021.csv")
-        rice_2022_path = os.path.join(self.datasetDir, "Rice", "Rice2022.csv")
-        rice_2023_path = os.path.join(self.datasetDir, "Rice", "Rice2023.csv")
+        rice_2021_path =  os.path.join(self.datasetDir, "Rice", "rice2021.csv")
+        rice_2022_path = os.path.join(self.datasetDir, "Rice", "rice2022.csv")
+        rice_2023_path = os.path.join(self.datasetDir, "Rice", "rice2023.csv")
 
         cotton_2021_df = pd.read_csv(cotton_2021_path)
         cotton_2022_df = pd.read_csv(cotton_2022_path)
