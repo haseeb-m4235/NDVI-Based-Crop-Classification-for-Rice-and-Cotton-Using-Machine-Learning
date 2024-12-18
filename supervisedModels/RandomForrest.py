@@ -1,9 +1,5 @@
 from .SupervisedModel import SupervisedModel
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import f1_score, make_scorer
-import pandas as pd
-
 
 class RandomForrest(SupervisedModel):
     def __init__(self, data, param_grid):

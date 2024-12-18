@@ -13,7 +13,6 @@ from sklearn.model_selection import GridSearchCV
 import pandas as pd
 from sklearn.metrics import f1_score, make_scorer
 
-
 class SupervisedModel():
     def __init__(self, data, classifiers, param_grid):
         self.class_names=['rice', 'cotton']
