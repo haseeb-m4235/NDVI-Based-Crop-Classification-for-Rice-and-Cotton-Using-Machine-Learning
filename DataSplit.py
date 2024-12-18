@@ -81,12 +81,12 @@ class DataSplit():
         test_rice_count = test_df[test_df['label'] == 0].shape[0]  
 
         # Print results  
-        print("Training Dataset:")  
+        print(f"Training Dataset of year {train_data_1} and {train_data_2}:")  
         print(f"Cotton samples: {train_cotton_count}")  
         print(f"Rice samples: {train_rice_count}")  
-        print("\nTesting Dataset:")  
+        print(f"Testing Dataset of year {test_data}:")  
         print(f"Cotton samples: {test_cotton_count}")  
-        print(f"Rice samples: {test_rice_count}")  
+        print(f"Rice samples: {test_rice_count}\n")  
         
         return X_train, y_train, X_test, y_test
     

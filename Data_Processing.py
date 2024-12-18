@@ -123,9 +123,9 @@ class DataPreProcess:
 
     Examples
     --------
-    >>> dp = DataPreProcess()
-    >>> X_train, X_test = dp.address_correlation(X_train, X_test, ['NDVI01', 'NDVI02'])
-    >>> print(X_train.columns)  # NDVI01 and NDVI02 should no longer be in the columns
+    dp = DataPreProcess()
+    X_train, X_test = dp.address_correlation(X_train, X_test, ['NDVI01', 'NDVI02'])
+    print(X_train.columns)  # NDVI01 and NDVI02 should no longer be in the columns
         """
         if drop_train_test:
             new_X_test=X_test.copy()
@@ -170,8 +170,8 @@ class DataPreProcess:
 
     Examples
     --------
-    >>> dp = DataPreProcess()
-    >>> X_train_sm, y_train_sm = dp.handle_imbalance(X_train, y_train)
+    dp = DataPreProcess()
+    X_train_sm, y_train_sm = dp.handle_imbalance(X_train, y_train)
     Original class distribution: Counter({0: 1000, 1: 100})
     New class distribution after SMOTE: Counter({0: 1000, 1: 1000})
     Total samples after augmentation: 2000
