@@ -5,7 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from imblearn.over_sampling import SMOTE
 from collections import Counter
-
+from DataSplit import DataSplit
 class DataPreProcess:
     def scalling(self, X_train, X_test, scaler=None):
         """
@@ -177,3 +177,5 @@ class DataPreProcess:
         print("New class distribution after SMOTE:", new_distribution)
         print("Total samples after augmentation:", len(y_train_sm))
         return X_train_sm, y_train_sm
+    def apply_preprocessing(self):
+        pass
