@@ -8,20 +8,16 @@ class DataSplit():
             datasetDir (str): Path to the dataset directory.
         """
         self.datasetDir = datasetDir
-        self.combining_data()
+        self.combined_data = self.get_combined_data()
         
-    def combining_data(self):
+    def get_combined_data(self):
         """
-        Combines the data from the different csv files into one dataframe.
-
-        The cotton and rice data are combined into one dataframe with the 'label' column
-        indicating whether it is a cotton (1) or rice (0) sample and the 'year' column indicating
-        the year of the data (2021, 2022 or 2023). The combined dataframe is stored as an
-        instance variable.
+        Combine all the datasets into a single dataframe.
 
         Returns:
-            None
+            pd.DataFrame: Combined dataframe.
         """
+
         cotton_2021_path = os.path.join(self.datasetDir, "Cotton", "cotton2021.csv")
         cotton_2022_path = os.path.join(self.datasetDir, "Cotton", "cotton2022.csv")
         cotton_2023_path = os.path.join(self.datasetDir, "Cotton", "cotton2023.csv")
@@ -49,8 +45,9 @@ class DataSplit():
         rice_2023_df['label'] = 0
         rice_2023_df['year'] = 2023
 
-        self.combined_data = pd.concat([cotton_2021_df, rice_2021_df, cotton_2022_df, rice_2022_df, cotton_2023_df, rice_2023_df], axis=0)
-
+        combined_data = pd.concat([cotton_2021_df, rice_2021_df, cotton_2022_df, rice_2022_df, cotton_2023_df, rice_2023_df], axis=0)
+        return combined_data
+    
     def get_split(self, train_data_1, train_data_2, test_data):
         """ 
         Splits the combined data into a training set and a testing set.

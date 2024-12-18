@@ -11,9 +11,13 @@ from sklearn.metrics import (
 )
 
 class Model():
-    def __init__(self):
+    def __init__(self, X_train, y_train, X_test, y_test):
         self.class_names=['rice', 'cotton']
-    
+        self.X_train = X_train
+        self.y_train = y_train
+        self.X_test = X_test
+        self.y_test = y_test
+        
     def plot_confusion_matrix(self, conf_matrix, class_names):
         """
         Plot the confusion matrix using matplotlib and seaborn.
