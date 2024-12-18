@@ -91,9 +91,9 @@ class DataSplit():
         return X_train, y_train, X_test, y_test
     
     def get_combined_split(self):
-        X_train_1, y_train_1, X_test_1, y_test_1 = self.get_split(train_data_1=2021, train_data_2=2022, test_data=2023)
+        X_train_1, y_train_1, X_test_1, y_test_1 = self.get_split(train_data_1=2022, train_data_2=2023, test_data=2021)
         X_train_2, y_train_2, X_test_2, y_test_2 = self.get_split(train_data_1=2021, train_data_2=2023, test_data=2022)
-        X_train_3, y_train_3, X_test_3, y_test_3 = self.get_split(train_data_1=2022, train_data_2=2023, test_data=2021)
+        X_train_3, y_train_3, X_test_3, y_test_3 = self.get_split(train_data_1=2022, train_data_2=2021, test_data=2023)
         return {
             "X_train_1":X_train_1,
             "y_train_1":y_train_1,
