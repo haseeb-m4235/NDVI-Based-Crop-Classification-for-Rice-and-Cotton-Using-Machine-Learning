@@ -56,8 +56,8 @@ class DataPreProcess:
         
         # Return scaled datasets
         return X_train_scaled, X_test_scaled
-    def null_detector(self):
-        pass
+    def null_detector(self,data):
+        print("The null in dataset are:\n",data.isna().sum())
 
     def imputer(self):
         pass
@@ -95,7 +95,7 @@ class DataPreProcess:
         plt.title("Feature Correlation Matrix")
         plt.show()
 
-    def address_correlation(self,X_train,X_test,columns_list:list):
+    def address_correlation(self,data,columns_list:list,X_train=None,X_test=None,drop_train_test=False):
         """
     Removes specified columns from the training and testing datasets to address multicollinearity.
 
@@ -123,14 +123,24 @@ class DataPreProcess:
 
     Examples
     --------
-    >>> dp = DataPreProcess()
-    >>> X_train, X_test = dp.address_correlation(X_train, X_test, ['NDVI01', 'NDVI02'])
-    >>> print(X_train.columns)  # NDVI01 and NDVI02 should no longer be in the columns
+    dp = DataPreProcess()
+    X_train, X_test = dp.address_correlation(X_train, X_test, ['NDVI01', 'NDVI02'])
+    print(X_train.columns)  # NDVI01 and NDVI02 should no longer be in the columns
         """
-        new_X_train=X_train.copy()
-        new_X_test=X_test.copy()
-        new_X_train.drop(columns=columns_list,inplace=True)
-        new_X_test.drop(columns=columns_list,inplace=True)
+        if drop_train_test:
+            new_X_test=X_test.copy()
+            new_X_train=X_train.copy()
+            new_X_test.drop(columns=columns_list,inplace=True)
+            new_X_train.drop(columns=columns_list,inplace=True)
+            return new_X_train,new_X_test
+        else:
+            data.drop(columns=columns_list,inplace=True)
+            return data
+
+        
+        
+        
+        
         return new_X_train,new_X_test
         
     def handle_imbalance(self,X_train,y_train):
@@ -160,8 +170,8 @@ class DataPreProcess:
 
     Examples
     --------
-    >>> dp = DataPreProcess()
-    >>> X_train_sm, y_train_sm = dp.handle_imbalance(X_train, y_train)
+    dp = DataPreProcess()
+    X_train_sm, y_train_sm = dp.handle_imbalance(X_train, y_train)
     Original class distribution: Counter({0: 1000, 1: 100})
     New class distribution after SMOTE: Counter({0: 1000, 1: 1000})
     Total samples after augmentation: 2000
@@ -177,5 +187,48 @@ class DataPreProcess:
         print("New class distribution after SMOTE:", new_distribution)
         print("Total samples after augmentation:", len(y_train_sm))
         return X_train_sm, y_train_sm
+    
     def apply_preprocessing(self):
-        pass
+
+        dataset_dir = 'Crop-dataset'
+        data = DataSplit(datasetDir=dataset_dir)
+
+        self.null_detector(data.combined_data)
+        print("As there is no Null in Dataset so no removal us needed\n")
+
+        # Plotting Correlation
+        print("Now we will check for the correlation in dataset\n")
+        self.plot_correlation(data.combined_data)
+
+        print("As NDVI10 is highly correlated with NDVI11 and NDVI09\nSo we will drop it\n")
+
+        # Addressing Correlation
+        data.combined_data=self.address_correlation(data.combined_data,columns_list=['NDVI10'])
+        print(data.combined_data.head(5))
+
+        print("Splitting the data:\n")
+        data_split=data.get_combined_split()
+        
+        # Performing Scalling
+        data_split["X_train_1"],data_split["X_test_1"]=self.scalling(data_split["X_train_1"],data_split["X_test_1"])
+        data_split["X_train_2"],data_split["X_test_2"]=self.scalling(data_split["X_train_2"],data_split["X_test_2"])
+        data_split["X_train_3"],data_split["X_test_3"]=self.scalling(data_split["X_train_3"],data_split["X_test_3"])
+
+        # Handling Imbalance
+        data_split["X_train_1"],data_split["y_train_1"]=self.handle_imbalance(data_split["X_train_1"],data_split["y_train_1"])
+        data_split["X_train_2"],data_split["y_train_2"]=self.handle_imbalance(data_split["X_train_2"],data_split["y_train_2"])
+        data_split["X_train_3"],data_split["y_train_3"]=self.handle_imbalance(data_split["X_train_3"],data_split["y_train_3"])
+
+        return data_split
+
+
+
+
+
+
+
+
+    
+
+
+
