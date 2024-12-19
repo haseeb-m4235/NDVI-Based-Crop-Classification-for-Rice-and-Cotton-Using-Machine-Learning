@@ -45,6 +45,4 @@ class KMeansModel(UnsupervisedModel):
 
         return results
 
-# Example Usage
-from sklearn.cluster import KMeans
 

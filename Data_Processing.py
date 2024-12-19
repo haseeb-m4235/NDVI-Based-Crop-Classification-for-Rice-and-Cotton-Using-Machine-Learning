@@ -296,17 +296,17 @@ class DataPreProcess:
         >>> print(augmented_data)
     """
         # Add noise to the data (simulating real-world variations)
-
+        df_new=df.copy()
         for col in column_list:
-            noise = np.random.normal(0, noise_factor, df[col].shape)
-            df[col] += noise
+            noise = np.random.normal(0, noise_factor, df_new[col].shape)
+            df_new[col] += noise
 
         # Time-series shifting (shifting the series by a random amount)
         for col in column_list:
             shift = random.randint(-shift_factor, shift_factor)
-            df[col] = df[col].shift(shift, fill_value=0)
+            df_new[col] = df_new[col].shift(shift, fill_value=0)
 
-        return df
+        return df_new
     
     def apply_unsupervised_processing(self):
         """
@@ -340,10 +340,11 @@ class DataPreProcess:
         >>> print(labels.head())
 
     """
-
+        print("Initializing Data Preprocessing....")
         dataset_dir = 'Crop-dataset'
         data = DataSplit(datasetDir=dataset_dir)
-
+        print("")
+        print("Detecting Nulls")
         self.null_detector(data.combined_data)
         print("As there is no Null in Dataset so no removal us needed\n")
 
@@ -354,14 +355,18 @@ class DataPreProcess:
         print(data.combined_data.head(5))
 
         # Applying Time series Augmentation
+        print("Applying Time series augmentation")
         features=self.augment_time_series(data.combined_data, list(data.combined_data.columns))
         print("After applying TS augmentatio")
         print(features.head(5))
 
         # Applying Scalling
+        print("")
+        print("Applying Scalling")
         features=self.scale_unsupervised(features)
-        print("Final Processed Data")
-        print(features.head(5))
+        print(features)
+        print("Data Processing is completed")
+        
 
         return features,labels
 
