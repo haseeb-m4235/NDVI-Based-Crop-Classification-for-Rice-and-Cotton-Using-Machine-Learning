@@ -1,11 +1,12 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler,MinMaxScaler
 import seaborn as sns
 import matplotlib.pyplot as plt
 from imblearn.over_sampling import SMOTE
 from collections import Counter
 from DataSplit import DataSplit
+import random
 class DataPreProcess:
     def scalling(self, X_train, X_test, scaler=None):
         """
@@ -248,6 +249,126 @@ class DataPreProcess:
         '''Add time series augmentation, feature engineering like log transform or polynomial feature etc'''
 
         return data_split
+    def scale_unsupervised(self,data):
+        scaler = StandardScaler()
+        data_scaled=data.copy()
+        data_scaled=scaler.fit_transform(data_scaled)
+
+        return data_scaled
+    
+
+    def augment_time_series(self,df, column_list, noise_factor=0.05, shift_factor=1):
+        """
+    Apply time-series data augmentation to simulate real-world variations in NDVI data.
+
+    This function performs two augmentation techniques:
+    1. **Adding Noise:** Random Gaussian noise is added to the specified columns to mimic real-world measurement variations.
+    2. **Time-Series Shifting:** Each specified column is shifted by a random number of steps within the range [-shift_factor, shift_factor]. 
+       Missing values introduced by the shift are filled with 0.
+
+    Args:
+        df (pd.DataFrame): Input dataset containing NDVI time-series data.
+        column_list (list of str): List of column names to apply the augmentation on.
+        noise_factor (float, optional): Standard deviation of the Gaussian noise to add. Default is 0.05.
+        shift_factor (int, optional): Maximum number of steps to shift the time series forward or backward. Default is 1.
+
+    Returns:
+        pd.DataFrame: Augmented dataset with noise and time-series shifting applied to the specified columns.
+
+    Notes:
+        - Adding noise simulates slight variations in NDVI values, reflecting real-world data acquisition noise.
+        - Time-series shifting adjusts the temporal alignment of the NDVI data, helping the model learn invariant features.
+        - Ensure that the input `df` is a pandas DataFrame, and the `column_list` contains valid column names from `df`.
+
+    Example:
+        >>> import pandas as pd
+        >>> import numpy as np
+        >>> data = pd.DataFrame({
+        ...     "NDVI1": np.random.rand(10),
+        ...     "NDVI2": np.random.rand(10)
+        ... })
+        >>> processor = DataProcessor()  # Assuming this is a class with this method
+        >>> augmented_data = processor.augment_time_series(data, ["NDVI1", "NDVI2"], noise_factor=0.1, shift_factor=2)
+        >>> print(augmented_data)
+    """
+        # Add noise to the data (simulating real-world variations)
+
+        for col in column_list:
+            noise = np.random.normal(0, noise_factor, df[col].shape)
+            df[col] += noise
+
+        # Time-series shifting (shifting the series by a random amount)
+        for col in column_list:
+            shift = random.randint(-shift_factor, shift_factor)
+            df[col] = df[col].shift(shift, fill_value=0)
+
+        return df
+    
+    def apply_unsupervised_processing(self):
+        """
+    Perform preprocessing steps for unsupervised learning on NDVI-based crop data.
+
+    This function performs the following preprocessing steps:
+    1. **Null Detection:** Detects and reports any missing values in the dataset.
+    2. **Feature Selection:** Drops irrelevant features, such as 'label' and 'year', from the dataset.
+    3. **Time-Series Augmentation:** Applies augmentation techniques to the NDVI time-series data, including:
+       - Adding Gaussian noise to simulate real-world measurement variations.
+       - Random time-series shifting to enhance temporal robustness.
+    4. **Feature Scaling:** Scales the augmented features to standardize the data.
+
+    Args:
+        None (relies on class attributes for dataset access and processing).
+
+    Returns:
+        tuple:
+            - pd.DataFrame: Processed feature dataset with augmented and scaled NDVI values.
+            - pd.Series: Corresponding labels for the data.
+
+    Notes:
+        - This function is designed for unsupervised learning tasks and assumes the presence of NDVI time-series data in the dataset.
+        - Time-series augmentation is applied before scaling to ensure that noise and shifts are preserved during the preprocessing.
+        - The labels are extracted before feature processing and returned unmodified.
+
+    Example:
+        >>> process = DataPreProcess()
+        >>> features, labels = process.apply_unsupervised_processing()
+        >>> print(features.shape)
+        >>> print(labels.head())
+
+    """
+
+        dataset_dir = 'Crop-dataset'
+        data = DataSplit(datasetDir=dataset_dir)
+
+        self.null_detector(data.combined_data)
+        print("As there is no Null in Dataset so no removal us needed\n")
+
+
+        # Getting Features and Labels
+        labels=data.combined_data['label']
+        data.combined_data.drop(['label','year'],axis=1,inplace=True)
+        print(data.combined_data.head(5))
+
+        # Applying Time series Augmentation
+        features=self.augment_time_series(data.combined_data, list(data.combined_data.columns))
+        print("After applying TS augmentatio")
+        print(features.head(5))
+
+        # Applying Scalling
+        features=self.scale_unsupervised(features)
+
+        return features,labels
+
+
+
+
+
+
+
+
+
+
+
 
 
 
