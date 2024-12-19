@@ -46,28 +46,57 @@ class SupervisedModel():
         return self.best_params
     
     def get_test_results(self):
+        print(f"\n\nindividual scroe: {self.individual_scores}\n\n")
         years = [2021, 2022, 2023]
-        for i, year in enumerate(years):
-            print(f"Final Results for year: {year}:")
-            print(f"Parameters: {self.individual_scores.loc[i, 'params']}")
-            print(f"Weighted F1: {self.individual_scores.loc[i, 'weighted_f1']:.4f}")
-            print(f"Accuracy: {self.individual_scores.loc[i, 'accuracy']:.4f}")
-            print(f"Precision: {self.individual_scores.loc[i, 'precision']:.4f}")
-            print(f"Recall: {self.individual_scores.loc[i, 'recall']:.4f}")
-            print(f"F1 Score: {self.individual_scores.loc[i, 'f1']:.4f}")
-            print(f"Confusion Matrix: {self.individual_scores.loc[i, 'confusion_matrix']}")
-            print(f"Classification Report: {self.individual_scores.loc[i, 'classification_report']}\n")
+        count=0
+        for index, row in self.individual_scores.iterrows():
+            print(f"Final Results for year: {years[count]}:")
+            print(f"Parameters: {row['params']}")
+            print(f"Weighted F1: {row['weighted_f1']:.4f}")
+            print(f"Accuracy: {row['accuracy']:.4f}")
+            print(f"Precision: {row['precision']:.4f}")
+            print(f"Recall: {row['recall']:.4f}")
+            print(f"F1 Score: {row['f1']:.4f}")
+            print(f"Confusion Matrix: {row['confusion_matrix']}")
+            print(f"Classification Report: {row['classification_report']}\n")
+            count+=1
         
         # Plot confusion matrix for each year
-        for i, year in enumerate(years):
-            cm = np.array(self.individual_scores.loc[i, 'confusion_matrix'])
+        count=0
+        for index, row in self.individual_scores.iterrows():
+            cm = np.array(row['confusion_matrix'])
             
             plt.figure(figsize=(6, 5))
             sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False,
                         xticklabels=["Predicted 0", "Predicted 1"], 
                         yticklabels=["Actual 0", "Actual 1"])
-            plt.title(f"Confusion Matrix for {year}")
+            plt.title(f"Confusion Matrix for {years[count]}")
             plt.xlabel('Predicted Labels')
             plt.ylabel('True Labels')
             plt.show()
+            count+=1
+
+        # for i, year in enumerate(years):
+        #     print(f"Final Results for year: {year}:")
+        #     print(f"Parameters: {self.individual_scores.iloc[i, 'params']}")
+        #     print(f"Weighted F1: {self.individual_scores.iloc[i, 'weighted_f1']:.4f}")
+        #     print(f"Accuracy: {self.individual_scores.iloc[i, 'accuracy']:.4f}")
+        #     print(f"Precision: {self.individual_scores.iloc[i, 'precision']:.4f}")
+        #     print(f"Recall: {self.individual_scores.iloc[i, 'recall']:.4f}")
+        #     print(f"F1 Score: {self.individual_scores.iloc[i, 'f1']:.4f}")
+        #     print(f"Confusion Matrix: {self.individual_scores.iloc[i, 'confusion_matrix']}")
+        #     print(f"Classification Report: {self.individual_scores.iloc[i, 'classification_report']}\n")
+        
+        # # Plot confusion matrix for each year
+        # for i, year in enumerate(years):
+        #     cm = np.array(self.individual_scores.iloc[i, 'confusion_matrix'])
+            
+        #     plt.figure(figsize=(6, 5))
+        #     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False,
+        #                 xticklabels=["Predicted 0", "Predicted 1"], 
+        #                 yticklabels=["Actual 0", "Actual 1"])
+        #     plt.title(f"Confusion Matrix for {year}")
+        #     plt.xlabel('Predicted Labels')
+        #     plt.ylabel('True Labels')
+        #     plt.show()
     
