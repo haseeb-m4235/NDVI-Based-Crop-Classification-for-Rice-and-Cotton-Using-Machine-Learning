@@ -227,14 +227,18 @@ class DataPreProcess:
         print("Now we will check for the correlation in dataset\n")
         self.plot_correlation(data.combined_data)
 
-        print("As NDVI10 is highly correlated with NDVI11 and NDVI09\nSo we will drop it\n")
-
         # Addressing Correlation
-        data.combined_data=self.address_correlation(data.combined_data,columns_list=['NDVI10'])
+        print("As the data is a time series data so we will not remove the correlated columns because it can lead to data loss")
         print(data.combined_data.head(5))
 
         print("Splitting the data:\n")
         data_split=data.get_combined_split()
+
+        # Applyin TS Augmentation
+        print("Now Applyin TS Augmentation (See DocString for details)")
+        data_split["X_train_1"]=self.augment_time_series(data_split["X_train_1"],list(data_split["X_train_1"].columns))
+        data_split["X_train_2"]=self.augment_time_series(data_split["X_train_2"],list(data_split["X_train_2"].columns))
+        data_split["X_train_3"]=self.augment_time_series(data_split["X_train_3"],list(data_split["X_train_3"].columns))
         
         # Performing Scalling
         data_split["X_train_1"],data_split["X_test_1"]=self.scalling(data_split["X_train_1"],data_split["X_test_1"])
@@ -246,7 +250,7 @@ class DataPreProcess:
         data_split["X_train_2"],data_split["y_train_2"]=self.handle_imbalance(data_split["X_train_2"],data_split["y_train_2"],desc="Class Distribution on 2021 and 2023 split")
         data_split["X_train_3"],data_split["y_train_3"]=self.handle_imbalance(data_split["X_train_3"],data_split["y_train_3"],desc="Class Distribution on 2021 and 2022 split")
 
-        '''Add time series augmentation, feature engineering like log transform or polynomial feature etc'''
+        '''Add feature engineering like log transform or polynomial feature etc'''
 
         return data_split
     def scale_unsupervised(self,data):
@@ -356,6 +360,8 @@ class DataPreProcess:
 
         # Applying Scalling
         features=self.scale_unsupervised(features)
+        print("Final Processed Data")
+        print(features.head(5))
 
         return features,labels
 
