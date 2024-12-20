@@ -308,6 +308,33 @@ class DataPreProcess:
 
         return df_new
     
+    def show_boxplot(self,df,string):
+        df=df.copy()
+        plt.rcParams['figure.figsize'] = [14,6]
+        sns.boxplot(data = df, orient="v")
+        plt.title(f"{string} Outliers Distribution", fontsize = 16)
+        plt.ylabel("Range", fontweight = 'bold')
+        plt.xlabel("Attributes", fontweight = 'bold')
+   
+
+    def remove_outliers(self,data):
+        df = data.copy()
+
+        for col in list(df.columns):
+        
+              Q1 = df[str(col)].quantile(0.05)
+              Q3 = df[str(col)].quantile(0.95)
+              IQR = Q3 - Q1
+              lower_bound = Q1 - 1.5*IQR
+              upper_bound = Q3 + 1.5*IQR
+
+              df = df[(df[str(col)] >= lower_bound) & 
+
+                (df[str(col)] <= upper_bound)]
+
+        return df
+
+
     def apply_unsupervised_processing(self):
         """
     Perform preprocessing steps for unsupervised learning on NDVI-based crop data.
@@ -352,19 +379,25 @@ class DataPreProcess:
         # Getting Features and Labels
         labels=data.combined_data['label']
         data.combined_data.drop(['label','year'],axis=1,inplace=True)
-        print(data.combined_data.head(5))
 
         # Applying Time series Augmentation
-        print("Applying Time series augmentation")
-        features=self.augment_time_series(data.combined_data, list(data.combined_data.columns))
-        print("After applying TS augmentatio")
-        print(features.head(5))
+        # print("Applying Time series augmentation")
+        # features=self.augment_time_series(data.combined_data, list(data.combined_data.columns))
+        # print("After applying TS augmentatio")
+        # print(features.head(5))
+
+        print("Ploting BOX Plot for outliers")
+        self.show_boxplot(data.combined_data,string="Before Removal")
+
+        print("Adressing Outliers")
+        features=self.remove_outliers(data.combined_data)
+        print("Now verify the outliers")
+        self.show_boxplot(features,string="After Removal")
 
         # Applying Scalling
         print("")
         print("Applying Scalling")
         features=self.scale_unsupervised(features)
-        print(features)
         print("Data Processing is completed")
         
 

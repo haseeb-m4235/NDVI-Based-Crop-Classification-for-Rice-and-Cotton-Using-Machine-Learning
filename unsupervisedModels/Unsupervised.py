@@ -55,7 +55,7 @@ class UnsupervisedModel:
         # Print results
         print(f"Cluster Purity: {purity:.4f}")
         print("\nClassification Report:")
-        print(classification_report(y_true, y_pred,target_names = ['Rice', 'Cotton',]))
+        print(classification_report(y_true, y_pred)) #target_names = ['Rice', 'Cotton']
 
         # Plot confusion matrix
         class_names = ['Rice', 'Cotton']
