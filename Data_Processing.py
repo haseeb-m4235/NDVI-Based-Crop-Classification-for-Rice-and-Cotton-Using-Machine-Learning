@@ -381,10 +381,10 @@ class DataPreProcess:
         data.combined_data.drop(['label','year'],axis=1,inplace=True)
 
         # Applying Time series Augmentation
-        # print("Applying Time series augmentation")
-        # features=self.augment_time_series(data.combined_data, list(data.combined_data.columns))
-        # print("After applying TS augmentatio")
-        # print(features.head(5))
+        print("Applying Time series augmentation")
+        features=self.augment_time_series(data.combined_data, list(data.combined_data.columns))
+        print("After applying TS augmentatio")
+        print(features.head(5))
 
         print("Ploting BOX Plot for outliers")
         self.show_boxplot(data.combined_data,string="Before Removal")
