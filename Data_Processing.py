@@ -227,14 +227,18 @@ class DataPreProcess:
         print("Now we will check for the correlation in dataset\n")
         self.plot_correlation(data.combined_data)
 
-        print("As NDVI10 is highly correlated with NDVI11 and NDVI09\nSo we will drop it\n")
-
         # Addressing Correlation
-        data.combined_data=self.address_correlation(data.combined_data,columns_list=['NDVI10'])
+        print("As the data is a time series data so we will not remove the correlated columns because it can lead to data loss")
         print(data.combined_data.head(5))
 
         print("Splitting the data:\n")
         data_split=data.get_combined_split()
+
+        # Applyin TS Augmentation
+        print("Now Applyin TS Augmentation (See DocString for details)")
+        data_split["X_train_1"]=self.augment_time_series(data_split["X_train_1"],list(data_split["X_train_1"].columns))
+        data_split["X_train_2"]=self.augment_time_series(data_split["X_train_2"],list(data_split["X_train_2"].columns))
+        data_split["X_train_3"]=self.augment_time_series(data_split["X_train_3"],list(data_split["X_train_3"].columns))
         
         # Performing Scalling
         data_split["X_train_1"],data_split["X_test_1"]=self.scalling(data_split["X_train_1"],data_split["X_test_1"])
@@ -246,7 +250,7 @@ class DataPreProcess:
         data_split["X_train_2"],data_split["y_train_2"]=self.handle_imbalance(data_split["X_train_2"],data_split["y_train_2"],desc="Class Distribution on 2021 and 2023 split")
         data_split["X_train_3"],data_split["y_train_3"]=self.handle_imbalance(data_split["X_train_3"],data_split["y_train_3"],desc="Class Distribution on 2021 and 2022 split")
 
-        '''Add time series augmentation, feature engineering like log transform or polynomial feature etc'''
+        '''Add feature engineering like log transform or polynomial feature etc'''
 
         return data_split
     def scale_unsupervised(self,data):
@@ -292,17 +296,17 @@ class DataPreProcess:
         >>> print(augmented_data)
     """
         # Add noise to the data (simulating real-world variations)
-
+        df_new=df.copy()
         for col in column_list:
-            noise = np.random.normal(0, noise_factor, df[col].shape)
-            df[col] += noise
+            noise = np.random.normal(0, noise_factor, df_new[col].shape)
+            df_new[col] += noise
 
         # Time-series shifting (shifting the series by a random amount)
         for col in column_list:
             shift = random.randint(-shift_factor, shift_factor)
-            df[col] = df[col].shift(shift, fill_value=0)
+            df_new[col] = df_new[col].shift(shift, fill_value=0)
 
-        return df
+        return df_new
     
     def apply_unsupervised_processing(self):
         """
@@ -336,10 +340,11 @@ class DataPreProcess:
         >>> print(labels.head())
 
     """
-
+        print("Initializing Data Preprocessing....")
         dataset_dir = 'Crop-dataset'
         data = DataSplit(datasetDir=dataset_dir)
-
+        print("")
+        print("Detecting Nulls")
         self.null_detector(data.combined_data)
         print("As there is no Null in Dataset so no removal us needed\n")
 
@@ -350,12 +355,18 @@ class DataPreProcess:
         print(data.combined_data.head(5))
 
         # Applying Time series Augmentation
+        print("Applying Time series augmentation")
         features=self.augment_time_series(data.combined_data, list(data.combined_data.columns))
         print("After applying TS augmentatio")
         print(features.head(5))
 
         # Applying Scalling
+        print("")
+        print("Applying Scalling")
         features=self.scale_unsupervised(features)
+        print(features)
+        print("Data Processing is completed")
+        
 
         return features,labels
 

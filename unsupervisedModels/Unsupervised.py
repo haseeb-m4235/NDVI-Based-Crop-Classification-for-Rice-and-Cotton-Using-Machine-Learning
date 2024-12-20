@@ -55,10 +55,11 @@ class UnsupervisedModel:
         # Print results
         print(f"Cluster Purity: {purity:.4f}")
         print("\nClassification Report:")
-        print(classification_report(y_true, y_pred))
+        print(classification_report(y_true, y_pred,target_names = ['Rice', 'Cotton',]))
 
         # Plot confusion matrix
-        self.plot_confusion_matrix(conf_matrix)
+        class_names = ['Rice', 'Cotton']
+        self.plot_confusion_matrix(conf_matrix,class_names)
 
         return {
             "purity": purity,
@@ -66,7 +67,7 @@ class UnsupervisedModel:
             "classification_report": classification_report(y_true, y_pred, output_dict=True),
         }
 
-    def plot_confusion_matrix(self, conf_matrix):
+    def plot_confusion_matrix(self, conf_matrix,class_names):
         """
         Plot the confusion matrix using matplotlib and seaborn.
 
@@ -74,7 +75,7 @@ class UnsupervisedModel:
             conf_matrix (array-like): Confusion matrix to plot.
         """
         plt.figure(figsize=(8, 6))
-        sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues')
+        sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues',xticklabels=class_names, yticklabels=class_names)
         plt.xlabel('Predicted Labels')
         plt.ylabel('True Labels')
         plt.title('Confusion Matrix')

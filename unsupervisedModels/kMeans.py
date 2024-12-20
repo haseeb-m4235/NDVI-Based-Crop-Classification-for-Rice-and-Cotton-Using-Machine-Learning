@@ -45,19 +45,4 @@ class KMeansModel(UnsupervisedModel):
 
         return results
 
-# Example Usage
-from sklearn.cluster import KMeans
 
-# data = {
-#     "X_train": np.random.rand(100, 10),  # Replace with actual NDVI time-series data
-#     "y_train": np.random.randint(0, 2, 100),
-# }
-
-# kmeans_model = KMeans(n_clusters=2, random_state=42)
-# kmeans_instance = KMeansModel(data, kmeans_model)
-
-# # Without PCA
-# results_without_pca = kmeans_instance.train_and_evaluate(use_pca=False)
-
-# # With PCA
-# results_with_pca = kmeans_instance.train_and_evaluate(use_pca=True, n_components=2)
