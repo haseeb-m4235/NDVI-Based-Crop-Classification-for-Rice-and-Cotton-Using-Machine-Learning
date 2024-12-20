@@ -20,7 +20,7 @@ class RandomForrest(SupervisedModel):
     def train_single_model(self, X_train, y_train, X_test, y_test):
         results = []
         for params in self.grid:
-            classifier = RandomForestClassifier(random_state=42, **params)
+            classifier = RandomForestClassifier(random_state=42,n_jobs=-1, **params)
             classifier.fit(X_train, y_train)
             y_pred = classifier.predict(X_test)
 

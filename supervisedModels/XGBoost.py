@@ -19,7 +19,7 @@ class XGBoost(SupervisedModel):
     def train_single_model(self, X_train, y_train, X_test, y_test):
         results = []
         for params in self.grid:
-            classifier = XGBClassifier(random_state=42, use_label_encoder=False, eval_metric='logloss', **params)
+            classifier = XGBClassifier(random_state=42,n_jobs=-1, use_label_encoder=False, eval_metric='logloss', **params)
             classifier.fit(X_train, y_train)
             y_pred = classifier.predict(X_test)
 
