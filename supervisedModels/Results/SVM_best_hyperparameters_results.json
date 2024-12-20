@@ -1,0 +1,77 @@
+[
+    {
+        "params":{
+            "C":10,
+            "gamma":"scale",
+            "kernel":"rbf"
+        },
+        "weighted_f1":0.8969537328,
+        "accuracy":0.8958207147,
+        "precision":0.9437259699,
+        "recall":0.9365244537,
+        "f1":0.9401114206,
+        "confusion_matrix":[
+            [
+                258,
+                161
+            ],
+            [
+                183,
+                2700
+            ]
+        ],
+        "classification_report":"              precision    recall  f1-score   support\n\n        rice       0.59      0.62      0.60       419\n      cotton       0.94      0.94      0.94      2883\n\n    accuracy                           0.90      3302\n   macro avg       0.76      0.78      0.77      3302\nweighted avg       0.90      0.90      0.90      3302\n",
+        "year":2021,
+        "params_str":"{'C': 10, 'gamma': 'scale', 'kernel': 'rbf'}"
+    },
+    {
+        "params":{
+            "C":10,
+            "gamma":"scale",
+            "kernel":"rbf"
+        },
+        "weighted_f1":0.8390366247,
+        "accuracy":0.8459468944,
+        "precision":0.8620306599,
+        "recall":0.9378776891,
+        "f1":0.8983561009,
+        "confusion_matrix":[
+            [
+                2824,
+                1863
+            ],
+            [
+                771,
+                11640
+            ]
+        ],
+        "classification_report":"              precision    recall  f1-score   support\n\n        rice       0.79      0.60      0.68      4687\n      cotton       0.86      0.94      0.90     12411\n\n    accuracy                           0.85     17098\n   macro avg       0.82      0.77      0.79     17098\nweighted avg       0.84      0.85      0.84     17098\n",
+        "year":2022,
+        "params_str":"{'C': 10, 'gamma': 'scale', 'kernel': 'rbf'}"
+    },
+    {
+        "params":{
+            "C":10,
+            "gamma":"scale",
+            "kernel":"rbf"
+        },
+        "weighted_f1":0.8761205048,
+        "accuracy":0.8450693132,
+        "precision":0.9858359746,
+        "recall":0.8451218477,
+        "f1":0.910071778,
+        "confusion_matrix":[
+            [
+                776,
+                143
+            ],
+            [
+                1824,
+                9953
+            ]
+        ],
+        "classification_report":"              precision    recall  f1-score   support\n\n        rice       0.30      0.84      0.44       919\n      cotton       0.99      0.85      0.91     11777\n\n    accuracy                           0.85     12696\n   macro avg       0.64      0.84      0.68     12696\nweighted avg       0.94      0.85      0.88     12696\n",
+        "year":2023,
+        "params_str":"{'C': 10, 'gamma': 'scale', 'kernel': 'rbf'}"
+    }
+]

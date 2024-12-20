@@ -10,17 +10,18 @@ from sklearn.metrics import (
 )
 import pandas as pd
 from sklearn.svm import SVC
+from tqdm import tqdm
 
 class SVM(SupervisedModel):
     
     def __init__(self, data, param_grid):
         self.grid = ParameterGrid(param_grid)
-        super().__init__(data)
+        super().__init__(data, model_name="SVM")
 
     def train_single_model(self, X_train, y_train, X_test, y_test):
         results = []
-        for params in self.grid:
-            classifier = SVC(random_state=42,n_jobs=-1, **params)
+        for params in tqdm(self.grid):
+            classifier = SVC(random_state=42, **params)
             classifier.fit(X_train, y_train)
             y_pred = classifier.predict(X_test)
             accuracy = accuracy_score(y_test, y_pred)
@@ -32,8 +33,8 @@ class SVM(SupervisedModel):
             report = classification_report(y_test, y_pred, target_names=self.class_names)
 
             result = {"params":params, "weighted_f1":weighted_f1, "accuracy":accuracy, "precision":precision, "recall":recall, "f1":f1, "confusion_matrix":conf_matrix, "classification_report":report}
-            for key, value in result.items():
-                print(f"{key}: {value}\n")
+            # for key, value in result.items():
+            #     print(f"{key}: {value}\n")
             
             results.append(result)
             # print(result)
